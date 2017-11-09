@@ -6,7 +6,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>Pulled pork — pulledpork • pkgdown</title>
+<title>Automatic link references and articles in an HTML package — autolink_html • pkgdown</title>
 
 <!-- jquery -->
 <script src="https://code.jquery.com/jquery-3.1.0.min.js" integrity="sha384-nrOSfDHtoPMzJHjVTdCopGqIqeYETSXhZDFyniQ8ZHcVy08QesyHcnOUpMpqnmWq" crossorigin="anonymous"></script>
@@ -95,28 +95,67 @@
       <div class="row">
   <div class="col-md-9 contents">
     <div class="page-header">
-    <h1>Pulled pork</h1>
+    <h1>Automatic link references and articles in an HTML package</h1>
     </div>
 
     
-    <p>Pulled pork</p>
+    <p>The autolinker is built around two XPath expressions:</p><ul>
+<li><p><code>//pre[contains(@class, 'r')]</code>:
+this finds all <code>&lt;div&gt;</code>s with class <code>sourceCode</code> and <code>r</code>. The contents
+must be syntax-highlighted using <a href='http://pygments.org/'>pygments</a>.
+(This is default in <a href='http://www.rdocumentation.org/packages/rmarkdown/topics/html_document'>rmarkdown::html_document</a> when <code>theme = NULL</code>.)</p></li>
+<li><p><code>.//code[count(*) = 0]</code>: this finds all <code>&lt;code&gt;</code> that contain only
+text (and no other tags).</p></li>
+</ul>
     
 
-        
+    <pre class="usage"><span class='fu'>autolink_html</span>(<span class='no'>input</span>, <span class='kw'>output</span> <span class='kw'>=</span> <span class='no'>input</span>, <span class='kw'>local_packages</span> <span class='kw'>=</span> <span class='fu'>character</span>())</pre>
+    
+    <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a> Arguments</h2>
+    <table class="ref-arguments">
+    <colgroup><col class="name" /><col class="desc" /></colgroup>
+    <tr>
+      <th>input, output</th>
+      <td><p>Input and output paths for HTML file</p></td>
+    </tr>
+    <tr>
+      <th>local_packages</th>
+      <td><p>A named character vector providing relative paths
+(value) to packages (name) that can be reached with relative links
+from the target HTML document.</p></td>
+    </tr>
+    </table>
+    
+    <h2 class="hasAnchor" id="details"><a class="anchor" href="#details"></a>Details</h2>
+
+    <p>Currently the following expressions are linked:</p><ul>
+<li><p>Function calls, <code>foo()</code></p></li>
+<li><p>Function calls qualified with the package name, <code>bar::foo()</code></p></li>
+<li><p>Symbols qualified with the package name, <code>bar::baz</code></p></li>
+<li><p>Help calls, <code>?foo</code>, <code>package?foo</code>, and <code>?bar::foo</code></p></li>
+<li><p>Vignette calls, <code>vignette(baz)</code>, <code>vignette(baz, package = "bar")</code></p></li>
+</ul>
+    <p>Calls to <code>library()</code> and <code>require()</code> are used to find the topics connected
+to unqualified references.</p>
+    
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
-    <pre class="examples"><div class='input'><span class='fl'>1</span> + <span class='fl'>2</span></div><div class='output co'>#&gt; [1] 3</div><div class='input'><span class='fu'>plot</span>(<span class='fl'>1</span>, <span class='fl'>1</span>, <span class='kw'>axes</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>)</div><div class='img'><img src='pulledpork-1.png' alt='' width='700' height='432.632880098887' /></div><div class='input'>
-</div><span class='co'># NOT RUN {</span>
-<span class='fl'>1</span> + <span class='fl'>3</span>
-<span class='co'># }</span><div class='input'>
-<span class='fl'>2</span> + <span class='fl'>3</span></div><div class='output co'>#&gt; [1] 5</div><div class='input'><span class='fu'>plot</span>(<span class='fl'>1</span>:<span class='fl'>2</span>, <span class='fl'>1</span>:<span class='fl'>2</span>, <span class='kw'>axes</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>)</div><div class='img'><img src='pulledpork-2.png' alt='' width='700' height='432.632880098887' /></div><div class='input'>
-</div><div class='input'><span class='fl'>1</span> + <span class='fl'>3</span></div><div class='output co'>#&gt; [1] 4</div><div class='input'>
-<span class='no'>answer</span> <span class='kw'>&lt;-</span> <span class='fl'>1</span></div><div class='input'><span class='no'>answer</span> <span class='co'># should be 42</span></div><div class='output co'>#&gt; [1] 42</div></pre>
+    <pre class="examples"><span class='co'># NOT RUN {</span>
+<span class='fu'>autolink_html</span>(<span class='st'>"path/to/file.html"</span>,
+  <span class='kw'>local_packages</span> <span class='kw'>=</span> <span class='fu'>c</span>(
+    <span class='kw'>shiny</span> <span class='kw'>=</span> <span class='st'>"shiny"</span>,
+    <span class='kw'>shinydashboard</span> <span class='kw'>=</span> <span class='st'>"shinydashboard"</span>
+  )
+)
+<span class='co'># }</span></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="sidebar">
     <h2>Contents</h2>
     <ul class="nav nav-pills nav-stacked">
-            
+      <li><a href="#arguments">Arguments</a></li>
+      
+      <li><a href="#details">Details</a></li>
+      
       <li><a href="#examples">Examples</a></li>
     </ul>
 
